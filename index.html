@@ -161,13 +161,17 @@ background-opacity = 0.95
 background-blur = true
 
 # ---- การใช้งาน ----
-macos-option-as-alt = true      # ให้ Option ทำงานเป็น Alt (ใช้กับ tmux/vim)
-copy-on-select = clipboard      # เลือกข้อความแล้วก๊อปปี้ทันที
+# ให้ Option ทำงานเป็น Alt (ใช้กับ tmux/vim)
+macos-option-as-alt = true
+# เลือกข้อความแล้วก๊อปปี้ทันที
+copy-on-select = clipboard
 mouse-hide-while-typing = true
-window-save-state = always      # เปิดแอปใหม่แล้วได้หน้าต่าง/แท็บเดิมคืน
+# เปิดแอปใหม่แล้วได้หน้าต่าง/แท็บเดิมคืน
+window-save-state = always
 
 # ---- Quick Terminal ----
 keybind = global:cmd+grave_accent=toggle_quick_terminal</pre>
+<div class="warn"><strong>ห้ามเขียนคอมเมนต์ต่อท้ายบรรทัด</strong> เช่น <code>font-size = 14 # ใหญ่ขึ้น</code> Ghostty จะอ่าน <code># ใหญ่ขึ้น</code> เป็นส่วนหนึ่งของค่าแล้วแจ้งว่าค่าไม่ถูกต้อง ให้เขียนคอมเมนต์ไว้บรรทัดของตัวเองเท่านั้น</div>
 <div class="warn"><strong>อย่าก๊อปปี้ค่าเริ่มต้นทั้งหมดมาใส่</strong> คู่มือของ Ghostty ระบุว่าค่าเริ่มต้นบางตัวขัดกันเองเมื่อตั้งค่าลงไฟล์ตรงๆ ให้ใส่เฉพาะค่าที่ต้องการเปลี่ยน ถ้าต้องการดูว่ามีค่าอะไรให้ตั้งบ้าง ใช้คำสั่ง <code>ghostty +show-config --default --docs</code></div>
 <p>ค่าบางตัวโหลดใหม่ระหว่างที่แอปเปิดอยู่ไม่ได้ ถ้าแก้แล้วไม่เห็นผล ให้เปิดหน้าต่างใหม่ หรือปิดแอปด้วย <kbd>⌘</kbd> <kbd>Q</kbd> แล้วเปิดใหม่</p>
 
@@ -186,7 +190,8 @@ keybind = global:cmd+grave_accent=toggle_quick_terminal</pre>
 <h2 id="s8"><span class="n">8</span>Quick Terminal (terminal แบบดรอปดาวน์)</h2>
 <p>Quick Terminal คือ terminal ที่เลื่อนลงมาจากขอบบนจอเมื่อกดปุ่ม และซ่อนกลับเมื่อกดซ้ำ ใช้ได้ทุกเวลาแม้กำลังใช้แอปอื่นอยู่ <strong>ค่าเริ่มต้นยังไม่มีปุ่มลัด</strong> ต้องตั้งเองใน config:</p>
 <pre>keybind = global:cmd+grave_accent=toggle_quick_terminal
-quick-terminal-position = top    # หรือ bottom / left / right / center</pre>
+# หรือ bottom / left / right / center
+quick-terminal-position = top</pre>
 <p>หลังตั้งแล้ว กด <kbd>⌘</kbd> <kbd>`</kbd> (ปุ่มที่อยู่ใต้ Esc)</p>
 <div class="warn"><strong>ปุ่ม <code>global:</code> ต้องได้รับสิทธิ์ Accessibility</strong> ตอนกดครั้งแรก macOS จะถามสิทธิ์ ถ้าไม่ขึ้นให้ไปที่ System Settings → Privacy &amp; Security → Accessibility แล้วเปิดให้ Ghostty</div>
 
