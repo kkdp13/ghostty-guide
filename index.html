@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>คู่มือ Ghostty ฉบับใช้งานจริง</title>
+<style>
+  :root{
+    --bg:#fbfaf7; --ink:#1d1f23; --muted:#5d636d; --line:#e4e1da;
+    --card:#ffffff; --accent:#0f6e5c; --accent-soft:#e3f1ed; --key:#f1efe9;
+    --warn:#8a5a00; --warn-soft:#fbf1dc; --code:#f4f2ed;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#15171a; --ink:#e8e6e1; --muted:#a1a6ae; --line:#2b2f35;
+      --card:#1c1f23; --accent:#5cc8ad; --accent-soft:#1d332e; --key:#2a2e34;
+      --warn:#e8b34e; --warn-soft:#33291a; --code:#22262b; }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:17px/1.75 "Sukhumvit Set","Noto Sans Thai","IBM Plex Sans Thai",system-ui,sans-serif}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+  header{padding:12px 0 8px;border-bottom:1px solid var(--line);margin-bottom:8px}
+  h1{font-size:2rem;line-height:1.25;margin:0 0 6px;letter-spacing:-.01em}
+  .lede{color:var(--muted);margin:0 0 6px}
+  h2{font-size:1.35rem;margin:44px 0 10px;padding-top:8px;line-height:1.35}
+  h2 .n{color:var(--accent);font-variant-numeric:tabular-nums;margin-right:.35em}
+  h3{font-size:1.05rem;margin:24px 0 6px}
+  p{margin:8px 0}
+  a{color:var(--accent)}
+  nav.toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:20px 0}
+  nav.toc strong{display:block;margin-bottom:4px}
+  nav.toc ol{margin:0;padding-left:1.3em;columns:2;column-gap:28px}
+  @media (max-width:560px){ nav.toc ol{columns:1} }
+  nav.toc a{text-decoration:none}
+  pre,code{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.88em}
+  pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;line-height:1.55;margin:10px 0}
+  p code,li code,td code{background:var(--code);padding:1px 6px;border-radius:5px}
+  kbd{display:inline-block;font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:.82em;
+    background:var(--key);border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:0 7px;line-height:1.7;white-space:nowrap}
+  .then{color:var(--muted);margin:0 .25em;font-size:.85em}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.95em}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;color:var(--muted);font-size:.85em}
+  td:first-child{white-space:nowrap}
+  .note{background:var(--accent-soft);border-radius:10px;padding:12px 16px;margin:14px 0}
+  .warn{background:var(--warn-soft);border-radius:10px;padding:12px 16px;margin:14px 0}
+  .warn strong{color:var(--warn)}
+  .diagram{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0;font-family:"SF Mono",ui-monospace,monospace;font-size:.82em;line-height:1.5;white-space:pre;overflow-x:auto}
+  ol.steps>li{margin:6px 0}
+  footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.88em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>คู่มือ Ghostty ฉบับใช้งานจริง</h1>
+  <p class="lede">Ghostty เป็น terminal บน Mac ที่เร็วและเบา ทำงานแบบแอป Mac แท้ และแบ่งจอ เปิดแท็บ หรือเปิด terminal แบบดรอปดาวน์ได้โดยไม่ต้องลงอะไรเพิ่ม</p>
+  <p class="lede" style="font-size:.85em">อ้างอิง Ghostty 1.4.0 บน macOS · ปุ่มลัดทุกตัวตรวจจาก <code>ghostty +list-keybinds --default</code> · <kbd>⌘</kbd> = Command, <kbd>⌥</kbd> = Option, <kbd>⌃</kbd> = Control, <kbd>⇧</kbd> = Shift</p>
+</header>
+
+<nav class="toc"><strong>สารบัญ</strong><ol>
+  <li><a href="#s1">Ghostty คืออะไร</a></li>
+  <li><a href="#s2">แท็บและหน้าต่าง</a></li>
+  <li><a href="#s3">แบ่งจอ (split)</a></li>
+  <li><a href="#s4">ค้นหา · เลื่อน · ก๊อปปี้</a></li>
+  <li><a href="#s5">Command Palette</a></li>
+  <li><a href="#s6">ไฟล์ config</a></li>
+  <li><a href="#s7">เปลี่ยน theme และฟอนต์</a></li>
+  <li><a href="#s8">Quick Terminal (ดรอปดาวน์)</a></li>
+  <li><a href="#s9">ตั้งปุ่มลัดเอง</a></li>
+  <li><a href="#s10">คำสั่ง <code>ghostty +…</code></a></li>
+  <li><a href="#s11">ปัญหาที่เจอบ่อย</a></li>
+  <li><a href="#s12">ตารางปุ่มลัดทั้งหมด</a></li>
+</ol></nav>
+
+<h2 id="s1"><span class="n">1</span>Ghostty คืออะไร</h2>
+<p>Ghostty ใช้แทน Terminal.app หรือ iTerm2 ได้ สิ่งที่ทำให้มันต่างจากตัวอื่นคือ</p>
+<ul>
+  <li><strong>เร็ว</strong>: วาดหน้าจอด้วย GPU (Metal) ทำให้ log ยาวๆ หรือ output เยอะๆ ไม่กระตุก</li>
+  <li><strong>เป็นแอป Mac แท้</strong>: แท็บ, เมนู, ปุ่มลัด <kbd>⌘</kbd> และการแบ่งจอทำงานแบบเดียวกับแอป Mac ทั่วไป</li>
+  <li><strong>ค่าเริ่มต้นใช้ได้เลย</strong>: ไฟล์ config ว่างก็ใช้งานได้ปกติ แล้วค่อยปรับเฉพาะที่อยากเปลี่ยน</li>
+  <li><strong>มี theme ในตัวกว่า 800 แบบ</strong>: ไม่ต้องไปดาวน์โหลดเพิ่ม</li>
+</ul>
+<div class="note">ถ้าใช้ tmux อยู่แล้วก็ใช้คู่กันได้ ให้ Ghostty แบ่งจอบนเครื่องตัวเอง และใช้ tmux สำหรับงานที่ต้องเปิดค้างไว้หรือต่อผ่าน SSH (<a href="https://kkdp13.github.io/tmux-guide/">คู่มือ tmux</a>)</div>
+
+<h2 id="s2"><span class="n">2</span>แท็บและหน้าต่าง</h2>
+<table>
+<tr><th>ปุ่ม</th><th>ทำอะไร</th></tr>
+<tr><td><kbd>⌘</kbd> <kbd>T</kbd></td><td>เปิดแท็บใหม่</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>N</kbd></td><td>เปิดหน้าต่างใหม่</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>1</kbd> … <kbd>8</kbd></td><td>ไปแท็บที่ 1–8</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>9</kbd></td><td>ไปแท็บสุดท้าย</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>[</kbd> / <kbd>]</kbd></td><td>ไปแท็บก่อนหน้า / ถัดไป (<kbd>⌃</kbd> <kbd>Tab</kbd> ก็ใช้ได้)</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>W</kbd></td><td>ปิดช่องที่กำลังใช้ (ถ้ามีช่องเดียวจะปิดทั้งแท็บ)</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⌥</kbd> <kbd>W</kbd></td><td>ปิดทั้งแท็บ</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>W</kbd></td><td>ปิดทั้งหน้าต่าง</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>Z</kbd></td><td>ย้อนการปิดแท็บหรือช่องที่เพิ่งปิด (<kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>T</kbd> ก็ได้)</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>Enter</kbd></td><td>เต็มจอ</td></tr>
+</table>
+<p>แท็บและหน้าต่างใหม่จะ<strong>เปิดในโฟลเดอร์เดียวกับช่องที่ใช้อยู่</strong> (ค่า <code>window-inherit-working-directory = true</code>) จึงไม่ต้อง <code>cd</code> ซ้ำ</p>
+
+<h2 id="s3"><span class="n">3</span>แบ่งจอ (split)</h2>
+<div class="diagram">┌──────────────┬──────────────┐
+│              │              │
+│  ⌘D ─────►   │  ช่องใหม่ขวา  │
+│              │              │
+├──────────────┴──────────────┤
+│        ⌘⇧D ▼ ช่องใหม่ล่าง      │
+└─────────────────────────────┘</div>
+<table>
+<tr><th>ปุ่ม</th><th>ทำอะไร</th></tr>
+<tr><td><kbd>⌘</kbd> <kbd>D</kbd></td><td>แบ่งจอ เพิ่มช่องใหม่ทางขวา</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>D</kbd></td><td>แบ่งจอ เพิ่มช่องใหม่ด้านล่าง</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⌥</kbd> <kbd>←↑↓→</kbd></td><td>ย้ายไปช่องทางซ้าย/บน/ล่าง/ขวา</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>[</kbd> / <kbd>]</kbd></td><td>ไปช่องก่อนหน้า / ถัดไป</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⌃</kbd> <kbd>←↑↓→</kbd></td><td>ขยายหรือหดขนาดช่อง</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⌃</kbd> <kbd>=</kbd></td><td>ปรับทุกช่องให้เท่ากัน</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>Enter</kbd></td><td>ขยายช่องนี้เต็มแท็บชั่วคราว (zoom) กดซ้ำเพื่อคืนขนาดเดิม</td></tr>
+</table>
+<p>ช่องที่ไม่ได้ใช้อยู่จะดูจางลงเล็กน้อย (<code>unfocused-split-opacity = 0.7</code>) จะได้เห็นว่ากำลังพิมพ์อยู่ในช่องไหน ถ้าอยากใช้เมาส์ก็ลากเส้นแบ่งเพื่อปรับขนาด หรือคลิกเลือกช่องได้</p>
+
+<h2 id="s4"><span class="n">4</span>ค้นหา · เลื่อน · ก๊อปปี้</h2>
+<table>
+<tr><th>ปุ่ม</th><th>ทำอะไร</th></tr>
+<tr><td><kbd>⌘</kbd> <kbd>F</kbd></td><td>ค้นหาข้อความในหน้าจอและประวัติที่เลื่อนผ่านไป</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>G</kbd> / <kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>G</kbd></td><td>ไปผลค้นหาถัดไป / ก่อนหน้า</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>E</kbd></td><td>ค้นหาคำที่เลือกไว้</td></tr>
+<tr><td><kbd>Esc</kbd></td><td>ปิดช่องค้นหา</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>↑</kbd> / <kbd>↓</kbd></td><td>กระโดดไปคำสั่งก่อนหน้า / ถัดไป (ข้าม output ยาวๆ)</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>Home</kbd> / <kbd>End</kbd></td><td>ไปบนสุด / ล่างสุด</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>K</kbd></td><td>ล้างหน้าจอ</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>C</kbd> / <kbd>⌘</kbd> <kbd>V</kbd></td><td>ก๊อปปี้ / วาง</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>J</kbd></td><td>วางเนื้อหาทั้งหน้าจอเป็นไฟล์ชั่วคราว (เหมาะกับ output ยาว)</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>J</kbd></td><td>เปิดเนื้อหาทั้งหน้าจอเป็นไฟล์ในโปรแกรมแก้ไขข้อความ</td></tr>
+</table>
+<p>การกระโดดระหว่างคำสั่งด้วย <kbd>⌘</kbd> <kbd>↑</kbd> ต้องใช้ shell integration ซึ่ง Ghostty ติดตั้งให้เองใน zsh, bash และ fish (<code>shell-integration = detect</code>)</p>
+<p>ในบรรทัดคำสั่ง <kbd>⌘</kbd> <kbd>←</kbd>/<kbd>→</kbd> ไปต้นหรือท้ายบรรทัด <kbd>⌥</kbd> <kbd>←</kbd>/<kbd>→</kbd> ข้ามทีละคำ และ <kbd>⌘</kbd> <kbd>⌫</kbd> ลบทั้งบรรทัด</p>
+
+<h2 id="s5"><span class="n">5</span>Command Palette</h2>
+<p>กด <kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>P</kbd> แล้วพิมพ์ชื่อคำสั่งที่ต้องการ เช่น <em>split</em>, <em>theme</em>, <em>title</em> ถ้าจำปุ่มลัดไม่ได้ ให้ใช้วิธีนี้</p>
+<div class="note">ตั้งชื่อแท็บ: เปิด palette แล้วพิมพ์ <em>title</em> (คำสั่ง <code>prompt_surface_title</code>) เช่นตั้งเป็น <code>server</code> / <code>logs</code> / <code>claude</code> จะหาแท็บที่ต้องการได้ง่ายขึ้น</div>
+
+<h2 id="s6"><span class="n">6</span>ไฟล์ config</h2>
+<ol class="steps">
+  <li>กด <kbd>⌘</kbd> <kbd>,</kbd> เพื่อเปิดไฟล์ config</li>
+  <li>แก้ไขแล้วเซฟ</li>
+  <li>กด <kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>,</kbd> เพื่อโหลด config ใหม่โดยไม่ต้องปิดแอป</li>
+</ol>
+<p>บน Mac ไฟล์อยู่ที่</p>
+<pre>~/Library/Application Support/com.mitchellh.ghostty/config.ghostty</pre>
+<p>ถ้าสร้างไฟล์ไว้ที่ <code>~/.config/ghostty/config.ghostty</code> Ghostty ก็จะอ่านให้เช่นกัน รูปแบบไฟล์เป็น <code>ชื่อ = ค่า</code> บรรทัดละหนึ่งค่า และบรรทัดที่ขึ้นต้นด้วย <code>#</code> เป็นคอมเมนต์ ตัวอย่างชุดเริ่มต้นที่ใช้ได้ทันที:</p>
+<pre># ---- หน้าตา ----
+theme = light:Catppuccin Latte,dark:Catppuccin Mocha
+font-family = JetBrains Mono
+font-size = 14
+window-padding-x = 10
+window-padding-y = 8
+background-opacity = 0.95
+background-blur = true
+
+# ---- การใช้งาน ----
+macos-option-as-alt = true      # ให้ Option ทำงานเป็น Alt (ใช้กับ tmux/vim)
+copy-on-select = clipboard      # เลือกข้อความแล้วก๊อปปี้ทันที
+mouse-hide-while-typing = true
+window-save-state = always      # เปิดแอปใหม่แล้วได้หน้าต่าง/แท็บเดิมคืน
+
+# ---- Quick Terminal ----
+keybind = global:cmd+grave_accent=toggle_quick_terminal</pre>
+<div class="warn"><strong>อย่าก๊อปปี้ค่าเริ่มต้นทั้งหมดมาใส่</strong> คู่มือของ Ghostty ระบุว่าค่าเริ่มต้นบางตัวขัดกันเองเมื่อตั้งค่าลงไฟล์ตรงๆ ให้ใส่เฉพาะค่าที่ต้องการเปลี่ยน ถ้าต้องการดูว่ามีค่าอะไรให้ตั้งบ้าง ใช้คำสั่ง <code>ghostty +show-config --default --docs</code></div>
+<p>ค่าบางตัวโหลดใหม่ระหว่างที่แอปเปิดอยู่ไม่ได้ ถ้าแก้แล้วไม่เห็นผล ให้เปิดหน้าต่างใหม่ หรือปิดแอปด้วย <kbd>⌘</kbd> <kbd>Q</kbd> แล้วเปิดใหม่</p>
+
+<h2 id="s7"><span class="n">7</span>เปลี่ยน theme และฟอนต์</h2>
+<h3>Theme</h3>
+<pre>ghostty +list-themes</pre>
+<p>คำสั่งนี้เปิดหน้าดูตัวอย่าง theme แบบเลื่อนดูได้ (ในเครื่องนี้มี 819 แบบ) เลือกชื่อที่ชอบแล้วใส่ใน config เช่น</p>
+<pre>theme = Catppuccin Mocha</pre>
+<p>ถ้าต้องการให้เปลี่ยนตามโหมดสว่าง/มืดของ Mac ให้ใส่ทั้งสองแบบ:</p>
+<pre>theme = light:Catppuccin Latte,dark:Catppuccin Mocha</pre>
+<p>ชุดที่คนใช้กันเยอะ ได้แก่ Catppuccin, Dracula, Gruvbox, Tokyo Night, Nord, Rose Pine</p>
+<h3>ฟอนต์</h3>
+<pre>ghostty +list-fonts      # ดูฟอนต์ที่ติดตั้งในเครื่อง</pre>
+<p>ใส่ชื่อฟอนต์ใน <code>font-family</code> ถ้าไม่ได้ตั้ง Ghostty จะใช้ฟอนต์ในตัวซึ่งรองรับไอคอน Nerd Font อยู่แล้ว และปรับขนาดชั่วคราวได้ด้วย <kbd>⌘</kbd> <kbd>+</kbd> / <kbd>⌘</kbd> <kbd>-</kbd> / <kbd>⌘</kbd> <kbd>0</kbd></p>
+
+<h2 id="s8"><span class="n">8</span>Quick Terminal (terminal แบบดรอปดาวน์)</h2>
+<p>Quick Terminal คือ terminal ที่เลื่อนลงมาจากขอบบนจอเมื่อกดปุ่ม และซ่อนกลับเมื่อกดซ้ำ ใช้ได้ทุกเวลาแม้กำลังใช้แอปอื่นอยู่ <strong>ค่าเริ่มต้นยังไม่มีปุ่มลัด</strong> ต้องตั้งเองใน config:</p>
+<pre>keybind = global:cmd+grave_accent=toggle_quick_terminal
+quick-terminal-position = top    # หรือ bottom / left / right / center</pre>
+<p>หลังตั้งแล้ว กด <kbd>⌘</kbd> <kbd>`</kbd> (ปุ่มที่อยู่ใต้ Esc)</p>
+<div class="warn"><strong>ปุ่ม <code>global:</code> ต้องได้รับสิทธิ์ Accessibility</strong> ตอนกดครั้งแรก macOS จะถามสิทธิ์ ถ้าไม่ขึ้นให้ไปที่ System Settings → Privacy &amp; Security → Accessibility แล้วเปิดให้ Ghostty</div>
+
+<h2 id="s9"><span class="n">9</span>ตั้งปุ่มลัดเอง</h2>
+<p>รูปแบบคือ <code>keybind = ปุ่ม=คำสั่ง</code> ดูชื่อคำสั่งทั้งหมดได้จาก <code>ghostty +list-actions</code></p>
+<pre># ปุ่มเดียว
+keybind = cmd+shift+r=reload_config
+
+# กดต่อกันเป็นลำดับ (แบบ prefix ของ tmux): กด ctrl+a แล้วตามด้วย n
+keybind = ctrl+a>n=new_tab
+
+# ยกเลิกปุ่มลัดเดิมของ Ghostty เพื่อส่งปุ่มนั้นให้โปรแกรมใน terminal
+keybind = cmd+k=unbind</pre>
+<table>
+<tr><th>prefix</th><th>ความหมาย</th></tr>
+<tr><td><code>global:</code></td><td>ใช้ได้แม้ Ghostty ไม่ได้อยู่ด้านหน้า (ต้องได้สิทธิ์ Accessibility)</td></tr>
+<tr><td><code>all:</code></td><td>สั่งกับทุกช่องพร้อมกัน</td></tr>
+<tr><td><code>unconsumed:</code></td><td>ทำคำสั่งของ Ghostty แล้วส่งปุ่มต่อให้โปรแกรมใน terminal ด้วย</td></tr>
+</table>
+<p>ดูปุ่มลัดทั้งหมดที่ใช้งานอยู่ได้ด้วย <code>ghostty +list-keybinds</code></p>
+
+<h2 id="s10"><span class="n">10</span>คำสั่ง <code>ghostty +…</code></h2>
+<p>ถ้าพิมพ์ <code>ghostty</code> แล้วไม่เจอคำสั่ง ให้ใช้ path เต็ม หรือเพิ่ม alias ใน <code>~/.zshrc</code>:</p>
+<pre>alias ghostty=/Applications/Ghostty.app/Contents/MacOS/ghostty</pre>
+<table>
+<tr><th>คำสั่ง</th><th>ทำอะไร</th></tr>
+<tr><td><code>+version</code></td><td>ดูเวอร์ชัน</td></tr>
+<tr><td><code>+list-themes</code></td><td>ดูตัวอย่าง theme</td></tr>
+<tr><td><code>+list-fonts</code></td><td>ดูรายการฟอนต์</td></tr>
+<tr><td><code>+list-keybinds</code></td><td>ดูปุ่มลัดที่ใช้อยู่ (<code>--default</code> = ค่าเริ่มต้น)</td></tr>
+<tr><td><code>+list-actions</code></td><td>ดูชื่อคำสั่งที่ใช้ตั้งปุ่มลัดได้</td></tr>
+<tr><td><code>+show-config</code></td><td>ดูค่าที่ใช้อยู่ตอนนี้ (<code>--default --docs</code> = ค่าเริ่มต้นพร้อมคำอธิบาย)</td></tr>
+<tr><td><code>+explain-config --option=theme</code></td><td>ดูคำอธิบายของค่าที่ระบุ</td></tr>
+<tr><td><code>+validate-config</code></td><td>ตรวจว่าไฟล์ config มีจุดผิดไหม</td></tr>
+<tr><td><code>+edit-config</code></td><td>เปิดไฟล์ config</td></tr>
+<tr><td><code>+ssh-cache</code></td><td>ดูหรือจัดการรายการเซิร์ฟเวอร์ที่ติดตั้ง terminfo ของ Ghostty ไปแล้ว (ใช้คู่กับ <code>ssh-terminfo</code> ในหัวข้อ 11)</td></tr>
+</table>
+
+<h2 id="s11"><span class="n">11</span>ปัญหาที่เจอบ่อย</h2>
+<h3>SSH เข้าเซิร์ฟเวอร์แล้วขึ้น <code>unknown terminal type</code> หรือปุ่ม/สีเพี้ยน</h3>
+<p>สาเหตุคือเซิร์ฟเวอร์ไม่รู้จัก <code>xterm-ghostty</code> ให้ใส่ใน config:</p>
+<pre>shell-integration-features = ssh-env,ssh-terminfo</pre>
+<p>หรือแก้เฉพาะครั้งด้วย <code>TERM=xterm-256color ssh user@host</code></p>
+<h3>กด Option + ตัวอักษรแล้วได้สัญลักษณ์แปลกๆ เช่น ∫ แทนที่จะเป็นปุ่ม Alt</h3>
+<p>ใส่ <code>macos-option-as-alt = true</code> (หรือ <code>left</code> ถ้าต้องการเฉพาะ Option ด้านซ้าย)</p>
+<h3>แก้ config แล้วไม่เห็นผล</h3>
+<p>รัน <code>ghostty +validate-config</code> เพื่อดูว่ามีบรรทัดที่ผิดไหม จากนั้นกด <kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>,</kbd> ถ้ายังไม่เห็นผล ให้ปิดแอปด้วย <kbd>⌘</kbd> <kbd>Q</kbd> แล้วเปิดใหม่</p>
+<h3>โปรแกรมใน terminal ขอสิทธิ์อ่าน clipboard</h3>
+<p>เป็นค่าเริ่มต้นที่ปลอดภัย (<code>clipboard-read = ask</code>) Ghostty จะถามก่อนทุกครั้งที่มีโปรแกรมขออ่าน clipboard ให้อนุญาตเฉพาะโปรแกรมที่รู้จัก</p>
+<h3>Quick Terminal กดแล้วไม่ขึ้น</h3>
+<p>ตรวจว่าตั้ง <code>keybind = global:…</code> ไว้แล้ว และ Ghostty ได้สิทธิ์ Accessibility (ดูหัวข้อ 8)</p>
+
+<h2 id="s12"><span class="n">12</span>ตารางปุ่มลัดทั้งหมด</h2>
+<table>
+<tr><th>ปุ่ม</th><th>ทำอะไร</th></tr>
+<tr><td><kbd>⌘</kbd> <kbd>T</kbd> / <kbd>⌘</kbd> <kbd>N</kbd></td><td>แท็บใหม่ / หน้าต่างใหม่</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>D</kbd> / <kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>D</kbd></td><td>แบ่งจอขวา / ล่าง</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⌥</kbd> <kbd>ลูกศร</kbd></td><td>ย้ายระหว่างช่อง</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⌃</kbd> <kbd>ลูกศร</kbd></td><td>ปรับขนาดช่อง</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>Enter</kbd></td><td>zoom ช่อง</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>1–9</kbd></td><td>ไปแท็บที่ระบุ</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>W</kbd> / <kbd>⌘</kbd> <kbd>Z</kbd></td><td>ปิดช่อง / ย้อนการปิด</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>F</kbd> · <kbd>⌘</kbd> <kbd>G</kbd></td><td>ค้นหา · ผลถัดไป</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>↑</kbd> / <kbd>↓</kbd></td><td>กระโดดระหว่างคำสั่ง</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>K</kbd></td><td>ล้างหน้าจอ</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>P</kbd></td><td>Command Palette</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>,</kbd> / <kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>,</kbd></td><td>เปิด config / โหลด config ใหม่</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>+</kbd> <kbd>-</kbd> <kbd>0</kbd></td><td>ขยาย / ย่อ / คืนขนาดฟอนต์</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>Enter</kbd></td><td>เต็มจอ</td></tr>
+<tr><td><kbd>⌘</kbd> <kbd>⌥</kbd> <kbd>I</kbd></td><td>Terminal Inspector (สำหรับดีบัก)</td></tr>
+</table>
+
+<footer>คู่มือนี้ตรวจกับ Ghostty 1.4.0 (macOS) · ปุ่มลัดและค่า config ดึงจากตัวโปรแกรมโดยตรง · เอกสารทางการ: <a href="https://ghostty.org/docs">ghostty.org/docs</a> · อัปเดต 2026-11-23</footer>
+</div>
+</body>
+</html>
